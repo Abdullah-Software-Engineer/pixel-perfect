@@ -1,10 +1,14 @@
 import ReactECharts from 'echarts-for-react';
+import { useMemo } from 'react';
+import { useTheme } from 'next-themes';
 import { useAppSelector } from '@/store/hooks';
 
 export function EnergyChart() {
   const { energyStats, totalEnergy, solarTotal, gridTotal } = useAppSelector(state => state.site);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
-  const chartOption = {
+  const chartOption = useMemo(() => ({
     backgroundColor: 'transparent',
     animation: true,
     animationDuration: 500,
@@ -13,7 +17,7 @@ export function EnergyChart() {
       left: 'center',
       top: 10,
       textStyle: {
-        color: '#f9fafb',
+        color: isDark ? '#f9fafb' : '#111827',
         fontSize: 16,
         fontWeight: 600,
       },
@@ -23,9 +27,9 @@ export function EnergyChart() {
       axisPointer: {
         type: 'shadow',
       },
-      backgroundColor: 'rgba(17, 24, 39, 0.95)',
-      borderColor: '#374151',
-      textStyle: { color: '#f9fafb' },
+      backgroundColor: isDark ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+      borderColor: isDark ? '#374151' : '#e5e7eb',
+      textStyle: { color: isDark ? '#f9fafb' : '#111827' },
       formatter: (params: any) => {
         const date = params[0]?.axisValue || '';
         const solar = params[0]?.value || 0;
@@ -42,7 +46,7 @@ export function EnergyChart() {
     legend: {
       data: [`Solar - ${solarTotal.toFixed(2)} KWh`, `Grid - ${gridTotal.toFixed(2)} KWh`],
       bottom: 10,
-      textStyle: { color: '#9ca3af' },
+      textStyle: { color: isDark ? '#9ca3af' : '#6b7280' },
       itemGap: 24,
     },
     grid: {
@@ -54,9 +58,9 @@ export function EnergyChart() {
     xAxis: {
       type: 'category',
       data: energyStats.map(d => d.date),
-      axisLine: { lineStyle: { color: '#374151' } },
+      axisLine: { lineStyle: { color: isDark ? '#374151' : '#d1d5db' } },
       axisLabel: { 
-        color: '#9ca3af', 
+        color: isDark ? '#9ca3af' : '#6b7280', 
         fontSize: 10,
         rotate: 45,
         interval: 2,
@@ -66,10 +70,10 @@ export function EnergyChart() {
     yAxis: {
       type: 'value',
       name: 'Energy (KWh)',
-      nameTextStyle: { color: '#9ca3af' },
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: '#9ca3af', fontSize: 11 },
-      splitLine: { lineStyle: { color: '#374151', type: 'dashed' } },
+      nameTextStyle: { color: isDark ? '#9ca3af' : '#6b7280' },
+      axisLine: { lineStyle: { color: isDark ? '#374151' : '#d1d5db' } },
+      axisLabel: { color: isDark ? '#9ca3af' : '#6b7280', fontSize: 11 },
+      splitLine: { lineStyle: { color: isDark ? '#374151' : '#e5e7eb', type: 'dashed' } },
     },
     series: [
       {
@@ -103,7 +107,7 @@ export function EnergyChart() {
         },
       },
     ],
-  };
+  }), [energyStats, totalEnergy, solarTotal, gridTotal, isDark]);
 
   return (
     <div className="glass-panel p-4 animate-fade-in">
