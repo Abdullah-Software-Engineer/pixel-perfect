@@ -1,5 +1,6 @@
 import ReactECharts from 'echarts-for-react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useTheme } from 'next-themes';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchLivePowerData, startPolling, stopPolling } from '@/store/slices/powerSlice';
 import { usePolling } from '@/hooks/usePolling';
@@ -9,13 +10,15 @@ import { Play, Square, Zap, Activity } from 'lucide-react';
 export function LiveChart() {
   const dispatch = useAppDispatch();
   const { chartData, isPolling, currentPower, loading } = useAppSelector(state => state.power);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   const fetchData = useCallback(async () => {
     await dispatch(fetchLivePowerData());
   }, [dispatch]);
 
   const { startPolling: start, stopPolling: stop } = usePolling(fetchData, {
-    interval: 60000, // 60 seconds as per requirements
+    interval: 60000,
     immediate: true,
   });
 
@@ -29,7 +32,6 @@ export function LiveChart() {
     stop();
   };
 
-  // Auto-start on mount
   useEffect(() => {
     handleStart();
     return () => {
@@ -37,7 +39,7 @@ export function LiveChart() {
     };
   }, []);
 
-  const chartOption = {
+  const chartOption = useMemo(() => ({
     backgroundColor: 'transparent',
     animation: true,
     animationDuration: 300,
@@ -50,7 +52,7 @@ export function LiveChart() {
     xAxis: {
       type: 'category',
       data: chartData.map((_, i) => i),
-      axisLine: { lineStyle: { color: '#374151' } },
+      axisLine: { lineStyle: { color: isDark ? '#374151' : '#d1d5db' } },
       axisLabel: { show: false },
       axisTick: { show: false },
     },
@@ -59,9 +61,9 @@ export function LiveChart() {
       min: -150,
       max: 150,
       interval: 50,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: '#9ca3af', fontSize: 11 },
-      splitLine: { lineStyle: { color: '#374151', type: 'solid' } },
+      axisLine: { lineStyle: { color: isDark ? '#374151' : '#d1d5db' } },
+      axisLabel: { color: isDark ? '#9ca3af' : '#6b7280', fontSize: 11 },
+      splitLine: { lineStyle: { color: isDark ? '#374151' : '#e5e7eb', type: 'solid' } },
     },
     series: [
       {
@@ -115,9 +117,9 @@ export function LiveChart() {
     ],
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(17, 24, 39, 0.95)',
-      borderColor: '#374151',
-      textStyle: { color: '#f9fafb' },
+      backgroundColor: isDark ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+      borderColor: isDark ? '#374151' : '#e5e7eb',
+      textStyle: { color: isDark ? '#f9fafb' : '#111827' },
       formatter: (params: any) => {
         const active = params[0]?.value || 0;
         const reactive = params[1]?.value || 0;
@@ -129,7 +131,7 @@ export function LiveChart() {
         `;
       },
     },
-  };
+  }), [chartData, isDark]);
 
   return (
     <div className="glass-panel p-4 animate-fade-in">

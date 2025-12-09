@@ -116,7 +116,11 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-lg;
+    @apply bg-card border border-border rounded-lg shadow-sm;
+  }
+
+  .dark .glass-panel {
+    @apply bg-card/80 backdrop-blur-sm border-border/50;
   }
 
   .glow-effect {
