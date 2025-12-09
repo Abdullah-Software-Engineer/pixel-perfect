@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, AlertTriangle, Building2, Wrench, Zap } from 'lucide-react';
+import { LayoutDashboard, Building2, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -16,7 +17,7 @@ export function Sidebar() {
         </div>
       </div>
       
-      <nav className="flex flex-col gap-2">
+      <nav className="flex flex-col gap-2 flex-1">
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -35,6 +36,10 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <div className="mt-auto">
+        <ThemeToggle />
+      </div>
     </aside>
   );
 }
