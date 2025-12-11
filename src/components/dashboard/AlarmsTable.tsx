@@ -83,21 +83,33 @@ export function AlarmsTable() {
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">
-              <TableHead className="w-10"></TableHead>
-              <TableHead className="w-24">Severity</TableHead>
-              <TableHead className="w-24">Active</TableHead>
-              <TableHead>Site Name</TableHead>
-              <TableHead>Event</TableHead>
-              <TableHead>Region</TableHead>
-              <TableHead>Start Time</TableHead>
-              <TableHead>Elapsed</TableHead>
-              <TableHead>Tags</TableHead>
+              <TableHead className="w-10 whitespace-nowrap"></TableHead>
+              <TableHead className="w-24 whitespace-nowrap">Severity</TableHead>
+              <TableHead className="w-24 whitespace-nowrap">Active</TableHead>
+              <TableHead className="whitespace-nowrap">Site Name</TableHead>
+              <TableHead className="whitespace-nowrap">Event</TableHead>
+              <TableHead className="whitespace-nowrap">Region</TableHead>
+              <TableHead className="whitespace-nowrap">Project</TableHead>
+              <TableHead className="whitespace-nowrap">Acknowledged By</TableHead>
+              <TableHead className="whitespace-nowrap">Acknowledged At</TableHead>
+              <TableHead className="whitespace-nowrap">Start Time</TableHead>
+              <TableHead className="whitespace-nowrap">End Time</TableHead>
+              <TableHead className="whitespace-nowrap">Elapsed Time</TableHead>
+              <TableHead className="whitespace-nowrap">T1</TableHead>
+              <TableHead className="whitespace-nowrap">T2</TableHead>
+              <TableHead className="whitespace-nowrap">T3</TableHead>
+              <TableHead className="whitespace-nowrap">T4</TableHead>
+              <TableHead className="whitespace-nowrap">T1 ID</TableHead>
+              <TableHead className="whitespace-nowrap">T2 ID</TableHead>
+              <TableHead className="whitespace-nowrap">T3 ID</TableHead>
+              <TableHead className="whitespace-nowrap">T4 ID</TableHead>
+              <TableHead className="whitespace-nowrap">Tags</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-8">
+                <TableCell colSpan={20} className="text-center py-8">
                   <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                     Loading alarms...
@@ -106,7 +118,7 @@ export function AlarmsTable() {
               </TableRow>
             ) : filteredAlarms.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={20} className="text-center py-8 text-muted-foreground">
                   {showFavoritesOnly ? 'No favorite alarms' : 'No alarms found'}
                 </TableCell>
               </TableRow>
@@ -116,7 +128,7 @@ export function AlarmsTable() {
                   key={alarm.id} 
                   className="border-border hover:bg-secondary/30 transition-colors"
                 >
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <button
                       onClick={() => handleToggleFavorite(alarm.id)}
                       className="p-1 rounded hover:bg-secondary transition-colors"
@@ -128,41 +140,77 @@ export function AlarmsTable() {
                       )}
                     </button>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <span className={cn('severity-badge', severityStyles[alarm.severity])}>
                       {severityLabels[alarm.severity]}
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-foreground">
-                    {alarm.active}
+                  <TableCell className="text-sm text-foreground whitespace-nowrap">
+                    {alarm.active ? 'true' : 'false'}
                   </TableCell>
-                  <TableCell className="font-mono text-sm text-foreground">
+                  <TableCell className="font-mono text-sm text-foreground whitespace-nowrap">
                     {alarm.siteName}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
                     {alarm.event}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
                     {alarm.region}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground font-mono">
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                    {alarm.project || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                    {alarm.acknowledgedBy || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
+                    {alarm.acknowledgedAt || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
                     {alarm.startTime}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
+                    {alarm.endTime || '-'}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <div className="flex items-center gap-1 text-sm text-muted-foreground font-mono">
                       <Clock className="w-3 h-3" />
                       {alarm.elapsedTime}
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                    {alarm.t1 || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                    {alarm.t2 || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                    {alarm.t3 || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                    {alarm.t4 || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
+                    {alarm.t1Id || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
+                    {alarm.t2Id || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
+                    {alarm.t3Id || '-'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground font-mono whitespace-nowrap">
+                    {alarm.t4Id || '-'}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex gap-1 max-w-[200px]">
                       {alarm.tags.slice(0, 3).map((tag, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs">
+                        <Badge key={i} variant="secondary" className="text-xs whitespace-nowrap">
                           {tag}
                         </Badge>
                       ))}
                       {alarm.tags.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs whitespace-nowrap">
                           +{alarm.tags.length - 3}
                         </Badge>
                       )}
